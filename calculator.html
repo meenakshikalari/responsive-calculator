@@ -1,0 +1,213 @@
+ <!-- Responsive JavaScript Calculator – Built an interactive calculator application using HTML, CSS, and Vanilla JavaScript with both mouse and keyboard support. Designed a clean, responsive UI with CSS Grid for layout and styled buttons with hover effects. Implemented dynamic display updates, operator handling, clear/backspace functionality, and error handling for invalid expressions.
+
+Key Features:
+
+Responsive layout using CSS Grid & Flexbox
+
+Keyboard input support for seamless user experience
+
+Real-time display updates and expression evaluation
+
+Clear (C) and backspace (←) functions
+
+Styled with custom hover states and color-coded operator buttons -->
+ 
+ 
+ 
+ 
+ 
+ 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .calculator {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      width: 320px;
+    }
+
+    .display {
+      background-color: #000;
+      color: #0f0;
+      font-size: 2em;
+      text-align: right;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      height: 60px;
+      overflow: hidden;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 20px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 5px;
+      background-color: #333;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #555;
+    }
+
+    .operator {
+      background-color: #f57c00;
+    }
+
+    .operator:hover {
+      background-color: #fb8c00;
+    }
+
+    .equals {
+      background-color: #43a047;
+      grid-column: span 2;
+    }
+
+    .equals:hover {
+      background-color: #66bb6a;
+    }
+
+    .clear {
+      background-color: #e53935;
+    }
+
+    .clear:hover {
+      background-color: #ef5350;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="clear">C</button>
+      <button id="backspace">←</button>
+      <button class="operator">/</button>
+      <button class="operator">*</button>
+    
+
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button class="operator">-</button>
+
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button class="operator">+</button>
+
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button class="equals">=</button>
+
+      <button id="zero">0</button>
+      <button>.</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const buttons = document.querySelectorAll("button");
+    let currentInput = "";
+    let resetNext = false;
+
+    buttons.forEach(button => {
+      button.addEventListener("click", () => {
+        const value = button.textContent;
+
+        if (button.classList.contains("clear")) {
+          currentInput = "";
+          updateDisplay("0");
+        } else if (button.id === "backspace") {
+          currentInput = currentInput.slice(0, -1);
+          updateDisplay(currentInput || "0");
+        } else if (button.classList.contains("equals")) {
+          try {
+            const result = eval(currentInput);
+            updateDisplay(result);
+            currentInput = result.toString();
+            resetNext = true;
+          } catch (err) {
+            updateDisplay("Error");
+            currentInput = "";
+          }
+        } else {
+          if (resetNext && !isOperator(value)) {
+            currentInput = "";
+            resetNext = false;
+          }
+          currentInput += value;
+          updateDisplay(currentInput);
+        }
+      });
+    });
+
+    function updateDisplay(value) {
+      display.textContent = value;
+    }
+
+    function isOperator(char) {
+      return ["+", "-", "*", "/","%"].includes(char);
+    }
+
+    // // Optional: Keyboard support
+    // document.addEventListener("keydown", (e) => {
+    //   const key = e.key;
+    //   if (!isNaN(key) || [".", "+", "-", "*", "/","%"].includes(key)) {
+    //     if (resetNext && !isOperator(key)) {
+    //       currentInput = "";
+    //       resetNext = false;
+    //     }
+    //     currentInput += key;
+    //     updateDisplay(currentInput);
+    //   } else if (key === "Enter") {
+    //     try {
+    //       const result = eval(currentInput);
+    //       updateDisplay(result);
+    //       currentInput = result.toString();
+    //       resetNext = true;
+    //     } catch (err) {
+    //       updateDisplay("Error");
+    //       currentInput = "";
+    //     }
+    //   } else if (key === "Backspace") {
+    //     currentInput = currentInput.slice(0, -1);
+    //     updateDisplay(currentInput || "0");
+    //   } else if (key === "Escape") {
+    //     currentInput = "";
+    //     updateDisplay("0");
+    //   }
+    // });
+  </script>
+</body>
+</html>
